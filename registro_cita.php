@@ -12,7 +12,7 @@ if ($conexion->connect_error) {
 
 // INSERTAR CITA
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $paciente_id = $_POST['id_px'];
+    $id_px = $_POST['id_px'];
     $fecha_cita = $_POST['fecha_cita'];
     $biceps = $_POST['biceps'];
     $triceps = $_POST['triceps'];
@@ -20,24 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gluteo = $_POST['gluteo'];
     $pierna = $_POST['pierna'];
     $espalda = $_POST['espalda'];
-    $peso = $_POST['peso'];
+    $peso_actual = $_POST['peso_actual'];
     $grasa = $_POST['porcentaje_grasa'];
 
     // Insertar en la tabla citas
-    $stmt = $conexion->prepare("INSERT INTO citas 
-        (paciente_id, fecha_cita, biceps, triceps, cintura, gluteo, pierna, espalda, peso, porcentaje_grasa)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issddddddd", $paciente_id, $fecha_cita, $biceps, $triceps, $cintura, $gluteo, $pierna, $espalda, $peso, $grasa);
+   $stmt = $conexion->prepare("INSERT INTO citas 
+    (id_px, fecha_cita, biceps, triceps, cintura, gluteo, pierna, espalda, peso_actual, porcentaje_grasa)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+  
+
+    $stmt->bind_param("isdddddddd", $id_px, $fecha_cita, $biceps, $triceps, $cintura, $gluteo, $pierna, $espalda, $peso_actual, $grasa);
     $stmt->execute();
     $stmt->close();
 
     // Actualizar peso y grasa en pacientes
-    $update = $conexion->prepare("UPDATE pacientes SET peso_actual = ?, porcentaje_grasa = ? WHERE id = ?");
-    $update->bind_param("ddi", $peso, $grasa, $paciente_id);
+    $update = $conexion->prepare("UPDATE pacientes SET peso_actual = ?, porcentaje_grasa = ? WHERE id_px = ?");
+    $update->bind_param("ddi", $peso_actual, $grasa, $id_px);
     $update->execute();
     $update->close();
 
-    echo "<script>alert('Cita registrada y datos del paciente actualizados.'); window.location.href='registro_cita.php';</script>";
+    echo "<script>alert('Cita registrada y datos del paciente actualizados.'); window.location.href='admin_dashboard.php';</script>";
 }
 
 // Obtener pacientes para el formulario
@@ -59,7 +62,7 @@ $pacientes = $conexion->query("SELECT id_px, nombre FROM pacientes ORDER BY nomb
             <select name="id_px" class="form-select" required>
                 <option value="">Seleccione...</option>
                 <?php while ($row = $pacientes->fetch_assoc()): ?>
-                    <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['nombre']) ?></option>
+                    <option value="<?= $row['id_px'] ?>"><?= htmlspecialchars($row['nombre']) ?></option>
                 <?php endwhile; ?>
             </select>
         </div>
@@ -70,7 +73,7 @@ $pacientes = $conexion->query("SELECT id_px, nombre FROM pacientes ORDER BY nomb
         </div>
 
         <?php
-        $campos = ['biceps', 'triceps', 'cintura', 'gluteo', 'pierna', 'espalda', 'peso', 'porcentaje_grasa'];
+        $campos = ['biceps', 'triceps', 'cintura', 'gluteo', 'pierna', 'espalda', 'peso_actual', 'porcentaje_grasa'];
         foreach ($campos as $campo):
         ?>
             <div class="col-md-6">
