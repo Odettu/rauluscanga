@@ -41,6 +41,17 @@ if (!isset($_SESSION['usuario']) || $_SESSION['tipo'] !== 'admin') {
         </a>
       </div>
 
+      <div class="row mt-4 g-4">
+      <!-- Módulo: Registro de Cita -->
+      <div class="col-md-4">
+        <a href="registro_cita.php" class="text-decoration-none">
+          <div class="card shadow p-4 text-center h-100">
+            <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+            <h5 class="text-dark">Citas</h5>
+          </div>
+        </a>
+      </div> 
+
       <!-- Módulo: Gestión de Usuarios -->
       <div class="col-md-4">
         <a href="usuarios.php" class="text-decoration-none">
