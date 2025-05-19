@@ -11,26 +11,50 @@ if ($conexion->connect_error) {
 }
 
 // INSERTAR PACIENTE
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar'])) {
-  $stmt = $conexion->prepare("INSERT INTO pacientes (nombre, whatsapp, correo, fecha_nacimiento, edad, ocupacion, sexo, peso_actual, porcentaje_grasa, usuario, contrasena) VALUES 
-  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $nombre = $_POST['nombre'];
-$whatsapp = $_POST['whatsapp'];
-$correo = $_POST['correo'];
-$fecha_nacimiento = $_POST['fecha_nacimiento'];
-$edad = $_POST['edad'];
-$ocupacion = $_POST['ocupacion'];
-$sexo = $_POST['sexo'];
-$peso_actual = $_POST['peso_actual'];
-$porcentaje_grasa = $_POST['porcentaje_grasa'];
-$usuario = $_POST['usuario'];
-$contrasena = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  include("conexion.php");
 
-$stmt->bind_param("ssssissddss", $nombre, $whatsapp, $correo, $fecha_nacimiento,
-  $edad, $ocupacion, $sexo,
-  $peso_actual, $porcentaje_grasa, $usuario, $contrasena);
+  $nombre = $_POST['nombre'];
+  $whatsapp = $_POST['whatsapp'];
+  $correo = $_POST['correo'];
+  $fecha_nacimiento = $_POST['fecha_nacimiento'];
+  $edad = $_POST['edad'];
+  $ocupacion = $_POST['ocupacion'];
+  $sexo = $_POST['sexo'];
+  $peso_actual = $_POST['peso_actual'];
+  $porcentaje_grasa = $_POST['porcentaje_grasa'];
+  $username = $_POST['usuario'];
+  $password_raw = $_POST['contrasena'];
+  $password_hash = hash('sha256', $password_raw); // Importante: usar el mismo hash que el login
+
+  // Verificar si el username ya existe en la tabla usuarios
+  $verificar = $conexion->prepare("SELECT id FROM usuarios WHERE username = ?");
+  $verificar->bind_param("s", $username);
+  $verificar->execute();
+  $verificar->store_result();
+
+  if ($verificar->num_rows > 0) {
+    echo "<script>alert('El nombre de usuario ya existe. Elige otro.'); window.history.back();</script>";
+    $verificar->close();
+    exit();
+  }
+  $verificar->close();
+
+  // Insertar en pacientes
+  $stmt = $conexion->prepare("INSERT INTO pacientes 
+    (nombre, whatsapp, correo, fecha_nacimiento, edad, ocupacion, sexo, peso_actual, porcentaje_grasa, usuario, contrasena)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssissddss", $nombre, $whatsapp, $correo, $fecha_nacimiento, $edad, $ocupacion, $sexo, $peso_actual, $porcentaje_grasa, $username, $password_hash);
   $stmt->execute();
   $stmt->close();
+
+  // Insertar en usuarios (para login)
+  $stmt2 = $conexion->prepare("INSERT INTO usuarios (nombre, username, password, tipo) VALUES (?, ?, ?, 'normal')");
+  $stmt2->bind_param("sss", $nombre, $username, $password_hash);
+  $stmt2->execute();
+  $stmt2->close();
+
+  echo "<script>alert('Paciente y usuario creados correctamente'); window.location.href='registro_pacientes.php';</script>";
 }
 
 // ELIMINAR PACIENTE
