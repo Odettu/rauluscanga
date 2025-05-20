@@ -130,6 +130,8 @@ $resultado = $conexion->query("SELECT * FROM pacientes ORDER BY id_px DESC");
     </div>
     <div class="col-md-12 text-end">
       <button type="submit" name="guardar" class="btn btn-primary">Guardar</button>
+      <a href="admin_dashboard.php" class="btn btn-secondary ms-2">Regresar</a>
+
     </div>
   </form>
 
@@ -160,6 +162,7 @@ $resultado = $conexion->query("SELECT * FROM pacientes ORDER BY id_px DESC");
           <td>
             <a href="editar_paciente.php?id=<?= $fila['id_px'] ?>" class="btn btn-sm btn-warning">Editar</a>
             <a href="?eliminar=<?= $fila['id_px'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este paciente?')">Eliminar</a>
+             <a href="cntacitas.php?id_px=<?= $fila['id_px'] ?>" class="btn btn-sm btn-primary">Citas</a>
           </td>
         </tr>
       <?php endwhile; ?>
