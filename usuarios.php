@@ -35,9 +35,19 @@ $usuarios = $conexion->query("SELECT * FROM usuarios ORDER BY id DESC");
 <head>
   <meta charset="UTF-8">
   <title>Gestión de Usuarios</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin_dashboard.php"><i class="fas fa-user-shield me-2"></i>Panel de Administrador</a>
+            <div class="d-flex">
+                <span class="text-white me-3"><i class="fas fa-user"></i> <?= $_SESSION['usuario']; ?></span>
+                <a href="logout.php" class="btn btn-outline-light">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
 <div class="container mt-5">
   <h3 class="mb-4">Gestión de Usuarios</h3>
 

@@ -70,7 +70,7 @@ if (isset($_GET['id_px'])) {
     </nav>
     <div class="container mt-5">
         <div class="card">
-            <div class="card-header bg-success">
+            <div class="card-header bg-light">
                 <h3>Consulta de Citas</h3>
             </div>
             <div class="card-body">

@@ -84,10 +84,21 @@ if (isset($_GET['id_px'])) {
 
 <head>
     <title>Registrar Cita</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
-<body class="container mt-4">
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin_dashboard.php"><i class="fas fa-user-shield me-2"></i>Panel de Administrador</a>
+            <div class="d-flex">
+                <span class="text-white me-3"><i class="fas fa-user"></i> <?= $_SESSION['usuario']; ?></span>
+                <a href="logout.php" class="btn btn-outline-light">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
+<div class="container mt-5">
     <h3>Registrar Cita de Paciente</h3>
     <form method="POST" class="row g-3">
 
@@ -123,6 +134,7 @@ if (isset($_GET['id_px'])) {
         </div>
 
     </form>
+</div>
 <?php if(isset($_GET['id_px'])){?>
     <h4>Historial de Citas</h4>
     <table class="table table-bordered table-striped">
